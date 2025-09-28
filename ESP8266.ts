@@ -149,7 +149,7 @@ namespace ESP8266_IoT {
 export function sendCustomHttpRequest(
     host: string,
     port: number,
-    verb: "GET" | "POST" | "PUT" | "DELETE",
+    verb: string,
     path: string,
     data: string = ""
 ) {
