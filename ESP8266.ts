@@ -142,26 +142,33 @@ namespace ESP8266_IoT {
 namespace ESP8266_IoT {
 
 
-    let host_def = ""
-    let path_def = ""
-
-    /*
-     * set post
-     */
-    //% subcategory=POST weight=9
-    //% blockId=setPOST block="set POST host:%host path:%path"
-    export function setIFTTT(host: string, path: string): void {
-        host_def = host
-        path_def = path
+/**
+ * Send a fully customizable HTTP request
+ */
+//% block="send HTTP request|host: %host|port: %port|verb: %verb|path: %path|data: %data"
+export function sendCustomHttpRequest(
+    host: string,
+    port: number,
+    verb: "GET" | "POST" | "PUT" | "DELETE",
+    path: string,
+    data: string = ""
+) {
+    // Prepare AT+HTTPCLIENT command
+    // Format: AT+HTTPCLIENT=<method>,<SSL>,<URL>,<contentType>,<data>,<returnResponse>,<timeout>
+    // method: 0=GET,1=POST,2=HEAD,3=PUT,4=DELETE
+    let methodNumber = 0
+    switch (verb) {
+        case "GET": methodNumber = 0; break;
+        case "POST": methodNumber = 1; break;
+        case "PUT": methodNumber = 3; break;
+        case "DELETE": methodNumber = 4; break;
     }
 
-    /*
-     * post
-     */
-    //% subcategory=POST weight=8
-    //% blockId=post block="post with body:%body"
-    export function postIFTTT(body: string): void {
-        sendAT("AT+HTTPCLIENT=3,1,\"" + host_def + path_def + "\",,,2,\"" + body + "\"", 1000)
-    }
+    let url = `http://${host}:${port}${path}`
+    let cmd = `AT+HTTPCLIENT=${methodNumber},0,"${url}",0,"${data}",1`
+
+    // Send command
+    sendAT(cmd, 1000)
+}
 
 }
