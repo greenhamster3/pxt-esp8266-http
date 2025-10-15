@@ -478,10 +478,10 @@ namespace ESP8266_IoT {
      * post ifttt
      */
     //% subcategory=IFTTT weight=8
-    //% blockId=postIFTTT block="post IFTTT"
-    export function postIFTTT(): void {
-        let sendST1 = "AT+HTTPCLIENT=3,1,\"http://evputer.local/data\",\"evputer.local:8080\",\"/data\",1,"
-        let sendST2 = "\"hello\""
+    //% blockId=postIFTTT block="post IFTTT with|value1:%value value2:%value2 value3:%value3"
+    export function postIFTTT(value1: string, value2: string, value3: string): void {
+        let sendST1 = "AT+HTTPCLIENT=3,1,\"http://192.168.1.26/trigger/" + iftttevent_def + "/with/key/" + iftttkey_def + "\",,,2,"
+        let sendST2 = "\"{\\\"value1\\\":\\\"" + value1 + "\\\"\\\,\\\"value2\\\":\\\"" + value2 + "\\\"\\\,\\\"value3\\\":\\\"" + value3 + "\\\"}\""
         let sendST = sendST1 + sendST2
         sendAT(sendST, 1000)
     }
