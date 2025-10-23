@@ -1,23 +1,15 @@
 # ESP8266_IoT package
 
-ESP8266_IoT package is developed under the cooperation of [ELECFREAKS](https://www.elecfreaks.com/), [CLASSROOM](http://www.classroom.com.hk/) and [TINKERCADEMY](https://tinkercademy.com/).
+ESP8266_IoT package is developed under the cooperation of [ELECFREAKS](https://www.elecfreaks.com/), [CLASSROOM](http://www.classroom.com.hk/) and [TINKERCADEMY](https://tinkercademy.com/) (and now me!!!)
 
-This package uploads data to THINGSPEAK IOT through [ESP8266 serial wifi module](http://www.elecfreaks.com/estore/esp8266-serial-wifi-module.html). 
+This package uploads data to MQTT, ThingSpeak, SmartIoT through [ESP8266 serial wifi module](http://www.elecfreaks.com/estore/esp8266-serial-wifi-module.html) aswell as making HTTP POST requests (my addition)
 
-Before start, you have to register an account of [thingspeak](https://thingspeak.com/).
-
-![](https://github.com/elecfreaks/pxt-esp8266iot/blob/master/ESP8266.png)
-
-
-## Hardware Setup
-
-1. Insert the [OLED display](http://www.elecfreaks.com/estore/iic-oled.html) into the I2C ports on the [ELECFREAKS Octopus:bit](http://www.elecfreaks.com/estore/elecfreaks-micro-bit-breakout-board.html).
-
+![](https://github.com/greenhamster3/pxt-esp8266-http/blob/master/ESP8266.png)
 
 ## Basic usage
 
 1. Open [Microsoft Makecode/microbit](https://pxt.microbit.org) and create a new project 
-2. Search and add the `ESP8266` package
+2. Search and add the url to this repo (https://github.com/greenhamster3/pxt-esp8266-http)
 3. Use the `ESP8266` drawer in the editor to drag out and arrange the blocks
 4. Click `Download` to move your program to the micro:bit
 
@@ -63,7 +55,8 @@ Send data to thingspeak.
 ```blocks
 ESP8266_IoT.senddata()
 ```
-
+## HTTP POST
+Use [the espressif documentation](https://docs.espressif.com/projects/esp-at/en/release-v2.3.0.0_esp8266/AT_Command_Set/HTTP_AT_Commands.html#parameters) for what to fill in the fields with.
 
 ## License
 
