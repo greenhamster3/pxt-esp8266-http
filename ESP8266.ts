@@ -464,18 +464,30 @@ namespace ESP8266_IoT {
      * http requests
      */
     //% subcategory=HTTP weight=8
-    //% blockId=postHTTP block="post HTTP with|value1:%value value2:%value2 value3:%value3"
-    export function postHTTP(opt: string, content_type: string, url: string, transport_type: string, data: string): void {
+    //% blockId=postHTTP block="post HTTP with|verb:%opt content type:%contentType url:%url transport type:%transportType data:%data"
+    export function postHTTP(opt: string, contentType: string, url: string, transportType: string, data: string): void {
         const verbLookup = {
-            "HEAD": 1
-            "GET": 2
-            "POST": 3
-            "PUT": 4
+            "HEAD": 1,
+            "GET": 2,
+            "POST": 3,
+            "PUT": 4,
             "DELETE": 5
         };
-        
-        let sendST = `AT+HTTPCLIENT=${verbLookup[opt]},1,"${url}",,,2,""`
-        sendAT(sendST, 1000)
+
+        const contentLookup = {
+            "application/x-www-form-urlencoded": 0,
+            "application/json": 1,
+            "multipart/form-data": 2,
+            "text/xml": 3,
+        };
+
+        const transportLookup = {
+            "tcp": 1,
+            "ssl": 2
+        };
+
+        let sendST = `AT+HTTPCLIENT=${verbLookup[opt]},${contentLookup[contentType]},"${url}",,,${transportLookup[transportType]},"${data}"`;
+        sendAT(sendST, 1000);
     }
 
 }
