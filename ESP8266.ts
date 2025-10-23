@@ -456,34 +456,19 @@ namespace ESP8266_IoT {
 }
 
 /************************************************************************
- * IFTTT
+ * HTTP
  ************************************************************************/
 namespace ESP8266_IoT {
 
-
-    let iftttkey_def = ""
-    let iftttevent_def = ""
-
     /*
-     * set ifttt
+     * http requests
      */
-    //% subcategory=IFTTT weight=9
-    //% blockId=setIFTTT block="set IFTTT key:%key event:%event"
-    export function setIFTTT(key: string, event: string): void {
-        iftttkey_def = key
-        iftttevent_def = event
-    }
-
-    /*
-     * post ifttt
-     */
-    //% subcategory=IFTTT weight=8
-    //% blockId=postIFTTT block="post IFTTT with|value1:%value value2:%value2 value3:%value3"
-    export function postIFTTT(value1: string, value2: string, value3: string): void {
-        let sendST1 = "AT+HTTPCLIENT=3,1,\"http://192.168.1.26/trigger/" + iftttevent_def + "/with/key/" + iftttkey_def + "\",,,2,"
-        let sendST2 = "\"{\\\"value1\\\":\\\"" + value1 + "\\\"\\\,\\\"value2\\\":\\\"" + value2 + "\\\"\\\,\\\"value3\\\":\\\"" + value3 + "\\\"}\""
-        let sendST = sendST1 + sendST2
+    //% subcategory=HTTP weight=8
+    //% blockId=postHTTP block="post HTTP with|value1:%value value2:%value2 value3:%value3"
+    export function postHTTP(value1: string, value2: string, value3: string): void {
+        let sendST = "AT+HTTPCLIENT=3,1,\"http://192.168.1.26/\",,,2,\"\""
         sendAT(sendST, 1000)
     }
 
 }
+
