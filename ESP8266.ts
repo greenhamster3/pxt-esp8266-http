@@ -472,7 +472,7 @@ export function postHTTP(
     data: string
 ): void {
 
-    const sendST = `AT+HTTPCLIENT=,${contentType},"${url}",,,${transportType},"${data}"`;
+    const sendST = `AT+HTTPCLIENT=3,${contentType},"${url}",,,${transportType},"${data}"`;
     sendAT(sendST, 1000);
 }
 
