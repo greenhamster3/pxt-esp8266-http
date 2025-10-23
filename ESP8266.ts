@@ -464,16 +464,15 @@ namespace ESP8266_IoT {
      * http requests
      */
     //% subcategory=HTTP weight=8
-    //% blockId=postHTTP block="post HTTP with|verb:%opt content type:%contentType url:%url transport type:%transportType data:%data"
+    //% blockId=postHTTP block="post HTTP with| content type:%contentType url:%url transport type:%transportType data:%data"
 export function postHTTP(
-    opt: string,
     contentType: string,
     url: string,
     transportType: string,
     data: string
 ): void {
 
-    const sendST = `AT+HTTPCLIENT=${opt},${contentType},"${url}",,,${transportType},"${data}"`;
+    const sendST = `AT+HTTPCLIENT=,${contentType},"${url}",,,${transportType},"${data}"`;
     sendAT(sendST, 1000);
 }
 
