@@ -472,27 +472,8 @@ export function postHTTP(
     transportType: string,
     data: string
 ): void {
-    const verbLookup: Record<string, number> = {
-        "HEAD": 1,
-        "GET": 2,
-        "POST": 3,
-        "PUT": 4,
-        "DELETE": 5
-    };
 
-    const contentLookup: Record<string, number> = {
-        "application/x-www-form-urlencoded": 0,
-        "application/json": 1,
-        "multipart/form-data": 2,
-        "text/xml": 3
-    };
-
-    const transportLookup: Record<string, number> = {
-        "tcp": 1,
-        "ssl": 2
-    };
-
-    const sendST = `AT+HTTPCLIENT=${verbLookup[opt]},${contentLookup[contentType]},"${url}",,,${transportLookup[transportType]},"${data}"`;
+    const sendST = `AT+HTTPCLIENT=${opt},${contentType},"${url}",,,${transportType},"${data}"`;
     sendAT(sendST, 1000);
 }
 
