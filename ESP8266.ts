@@ -465,10 +465,11 @@ namespace ESP8266_IoT {
      */
     //% subcategory=HTTP weight=8
     //% blockId=postHTTP block="post HTTP with|value1:%value value2:%value2 value3:%value3"
-    export function postHTTP(value1: string, value2: string, value3: string): void {
-        let sendST = "AT+HTTPCLIENT=3,1,\"http://192.168.1.26/\",,,2,\"\""
+    export function postHTTP(host: string): void {
+        let sendST = "AT+HTTPCLIENT=3,1,\"http://" + host + "/\",,,2,\"\""
         sendAT(sendST, 1000)
     }
 
 }
+
 
