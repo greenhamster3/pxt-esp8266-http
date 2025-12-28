@@ -1,3 +1,4 @@
+let httpPostHandler: (body: string) => void = null
 //% color=#0fbc11 icon="\uf1eb"
 namespace ESP8266_IoT {
 
@@ -9,7 +10,6 @@ namespace ESP8266_IoT {
 
     let wifi_connected = false;
     const msgHandlerMap: MsgHandler = {};
-    let httpPostHandler: (body: string) => void = null
 
     function sendHttpResponse(connId: number, status: number, body: string) {
     let response =
@@ -561,6 +561,7 @@ export function postHTTP(
 
 
 }
+
 
 
 
