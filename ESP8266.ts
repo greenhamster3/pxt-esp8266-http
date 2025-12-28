@@ -33,8 +33,6 @@ namespace ESP8266_IoT {
     let headers = http.substr(0, sep)
     let body = http.substr(sep + 4)
 
-    serial.writeLine("POST body: " + body)
-
     sendHttpResponse(connId, 200, "OK")
 
     if (httpPostHandler) {
@@ -61,10 +59,10 @@ namespace ESP8266_IoT {
     let payloadStart = colonIndex + 1
     let payloadEnd = payloadStart + length
 
+    // Wait for full payload
     if (ipdBuffer.length < payloadEnd) return false
 
     let payload = ipdBuffer.substr(payloadStart, length)
-
     handleHttpRequest(connId, payload)
 
     ipdBuffer = ipdBuffer.substr(payloadEnd)
@@ -561,6 +559,7 @@ export function postHTTP(
 
 
 }
+
 
 
 
