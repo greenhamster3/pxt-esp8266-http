@@ -528,7 +528,9 @@ namespace ESP8266_IoT {
  * HTTP
  ************************************************************************/
 namespace ESP8266_IoT {
-
+    
+    //% subcategory=HTTP weight=8
+    //% blockId=startServer block="startHTTPServer"
 export function startServer(): void {
     sendAT("AT+CIPMUX=1", 300)
     sendAT("AT+CIPSERVER=1,80", 300)
@@ -549,5 +551,6 @@ export function postHTTP(
 
 
 }
+
 
 
