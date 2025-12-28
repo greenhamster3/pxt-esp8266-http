@@ -9,32 +9,101 @@ namespace ESP8266_IoT {
 
     let wifi_connected = false;
     const msgHandlerMap: MsgHandler = {};
+    let httpPostHandler: (body: string) => void = null
+
+    function sendHttpResponse(connId: number, status: number, body: string) {
+    let response =
+        "HTTP/1.1 " + status + " OK\r\n" +
+        "Content-Type: text/plain\r\n" +
+        "Content-Length: " + body.length + "\r\n" +
+        "Connection: close\r\n" +
+        "\r\n" +
+        body
+
+    sendAT("AT+CIPSEND=" + connId + "," + response.length, 100)
+    serial.writeString(response)
+    sendAT("AT+CIPCLOSE=" + connId, 100)
+}
+
+
+    function handleHttpRequest(connId: number, http: string) {
+    let sep = http.indexOf("\r\n\r\n")
+    if (sep < 0) return
+
+    let headers = http.substr(0, sep)
+    let body = http.substr(sep + 4)
+
+    serial.writeLine("POST body: " + body)
+
+    sendHttpResponse(connId, 200, "OK")
+}
+
+
+    function tryParseIPD(): boolean {
+    let ipdIndex = ipdBuffer.indexOf("+IPD,")
+    if (ipdIndex < 0) return false
+
+    let colonIndex = ipdBuffer.indexOf(":", ipdIndex)
+    if (colonIndex < 0) return false
+
+    let header = ipdBuffer.substr(ipdIndex, colonIndex - ipdIndex)
+    let parts = header.split(",")
+
+    if (parts.length < 3) return false
+
+    let connId = parseInt(parts[1])
+    let length = parseInt(parts[2])
+
+    let payloadStart = colonIndex + 1
+    let payloadEnd = payloadStart + length
+
+    if (ipdBuffer.length < payloadEnd) return false
+
+    let payload = ipdBuffer.substr(payloadStart, length)
+
+    handleHttpRequest(connId, payload)
+
+    ipdBuffer = ipdBuffer.substr(payloadEnd)
+    return true
+}
+
 
     /*
     * on serial received data
     */
     let strBuf = ""
+    let ipdBuffer = ""
     function serialDataHandler() {
-        const str = strBuf + serial.readString();
-        let splits = str.split("\n")
-        if (str.charCodeAt(str.length - 1) != 10) {
-            strBuf = splits.pop()
-        } else {
-            strBuf = ""
-        }
-        for (let i = 0; i < splits.length; i++) {
-            let res = splits[i]
-            Object.keys(msgHandlerMap).forEach(key => {
-                if (res.includes(key)) {
-                    if (msgHandlerMap[key].type == 0) {
-                        msgHandlerMap[key].handler(res)
-                    } else {
-                        msgHandlerMap[key].msg = res;
-                    }
-                }
-            })
-        }
+    ipdBuffer += serial.readString()
+
+    // Always try IPD first
+    while (tryParseIPD()) {
+        
     }
+        
+    const str = strBuf + ipdBuffer
+    let splits = str.split("\n")
+
+    if (str.charCodeAt(str.length - 1) != 10) {
+        strBuf = splits.pop()
+    } else {
+        strBuf = ""
+    }
+
+    for (let i = 0; i < splits.length; i++) {
+        let res = splits[i]
+        Object.keys(msgHandlerMap).forEach(key => {
+            if (res.includes(key)) {
+                if (msgHandlerMap[key].type == 0) {
+                    msgHandlerMap[key].handler(res)
+                } else {
+                    msgHandlerMap[key].msg = res
+                }
+            }
+        })
+    }
+}
+    
 
     // write AT command with CR+LF ending
     export function sendAT(command: string, wait: number = 0) {
@@ -460,9 +529,11 @@ namespace ESP8266_IoT {
  ************************************************************************/
 namespace ESP8266_IoT {
 
-    /*
-     * http requests
-     */
+export function startServer(): void {
+    sendAT("AT+CIPMUX=1", 300)
+    sendAT("AT+CIPSERVER=1,80", 300)
+}
+
     //% subcategory=HTTP weight=8
     //% blockId=postHTTP block="post HTTP with| content type:%contentType url:%url transport type:%transportType data:%data"
 export function postHTTP(
@@ -478,4 +549,5 @@ export function postHTTP(
 
 
 }
+
 
