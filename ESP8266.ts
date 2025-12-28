@@ -36,6 +36,10 @@ namespace ESP8266_IoT {
     serial.writeLine("POST body: " + body)
 
     sendHttpResponse(connId, 200, "OK")
+
+    if (httpPostHandler) {
+        httpPostHandler(body)
+    }
 }
 
 
@@ -528,6 +532,12 @@ namespace ESP8266_IoT {
  * HTTP
  ************************************************************************/
 namespace ESP8266_IoT {
+
+    //% blockId=on_http_post block="on POST received" blockGap=16
+    //% weight=6
+    export function onHttpPost(handler: (body: string) => void) {
+        httpPostHandler = handler
+}
     
     //% subcategory=HTTP weight=7
     //% blockId=startServer block="startHTTPServer"
@@ -551,6 +561,7 @@ export function postHTTP(
 
 
 }
+
 
 
 
